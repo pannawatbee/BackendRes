@@ -10,8 +10,9 @@ exports.getAllReview = async (req, res, next) => {
 exports.getReviewById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const review = await Review.findOne({
-      where: { id },
+    console.log(id)
+    const review = await Review.findAll({
+      where: { ResterauntId:id },
     });
     res.json({ review });
   } catch (err) {
@@ -45,6 +46,7 @@ exports.createReview = async (req, res, next) => {
 exports.deleteReview = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const rows = await Review.destroy({
       where: { id },
     });

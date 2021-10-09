@@ -1,4 +1,6 @@
 const { Resteraunt } = require("../models");
+const {Review} = require('../models')
+const { Op } = require("sequelize");
 exports.getAllRestaurant = async (req, res, next) => {
   try {
     const resteraunt = await Resteraunt.findAll({});
@@ -10,14 +12,33 @@ exports.getAllRestaurant = async (req, res, next) => {
 exports.getRestaurantById = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(req.params)
     const resteraunt = await Resteraunt.findOne({
       where: { id },
+    });
+    const review = await Review.findAll({
+      where: { ResterauntId:id },
+    })
+    let sumstarrate = review.reduce((sum,current)=>sum+current.starRating,0)
+    let avgstarrate =(sumstarrate / review.length).toFixed(2)
+    res.json({ resteraunt,review,avgstarrate});
+  } catch (err) {
+    next(err);
+  }
+};
+exports.getRestaurantHome =async(req,res,next)=>{
+  try {
+    const resteraunt = await Resteraunt.findAll({
+      where:{
+        id:{[Op.between]:[1,3]
+        }
+      }
     });
     res.json({ resteraunt });
   } catch (err) {
     next(err);
   }
-};
+}
 exports.updateRestaurant = async (req, res, next) => {
   try {
     const { Restauraunt_Id } = req.params;

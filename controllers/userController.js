@@ -2,9 +2,10 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const CustomerError = require("../utils/error");
+// const JWT_SECRET_KEY =abcdef
 exports.register = async (req, res, next) => {
   try {
-    // console.log(req.body)
+    console.log(req.body);
     const { firstName, lastName, email, password, confirmPassword } = req.body;
     if (password !== confirmPassword) {
       throw new CustomerError("password and password not match", 400);
@@ -24,24 +25,32 @@ exports.register = async (req, res, next) => {
 };
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    // SELECT * FROM users where username = username
-    const user = await User.findOne({ where: { email: email } });
+    const test = req.body;
+    // console.log(test.formData.email);
+    const user = await User.findOne({ where: { email: test.formData.email } });
+    // console.log(user);
     if (!user) {
       return res.status(400).json({ message: "invalid email" });
     }
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = await bcrypt.compare(
+      test.formData.password,
+      user.password
+    );
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "invalid password" });
     }
     const payload = {
+      // ข้อมูลจากหล้งบ้านที่ต้องการส่งไปที่หน้าบ้าน
       id: user.id,
       email: user.email,
       username: user.name,
+      userType:user.userType
     };
-    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+    
+    console.log(process.env.JWT_SECRET_KEY)
+    const token = jwt.sign(payload,process.env.JWT_SECRET_KEY, {
       expiresIn: 30 * 60 * 60 * 24,
-    });
+    }); // คำสั่ง gen token
     console.log(token);
     res.json({ message: "success logged in", token });
   } catch (err) {

@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(45),
       allowNull: false,
     },
+    reviewImage: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    }
   });
   Review.associate = (models) => {
     Review.belongsTo(models.User, {

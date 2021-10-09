@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     otherDetail: {
       type: DataTypes.STRING(255),
     },
-    openingTime: {
+    openingTime1: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    openingTime2: {
       type: DataTypes.STRING(45),
       allowNull: false,
     },
@@ -34,7 +38,10 @@ module.exports = (sequelize, DataTypes) => {
     carpark: DataTypes.BOOLEAN,
     wifi: DataTypes.BOOLEAN,
     creditCard: DataTypes.BOOLEAN,
-    restaurantImage: DataTypes.BLOB,
+    restaurantImage: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    }
   });
   Resteraunt.associate = (models) => {
     Resteraunt.belongsTo(models.User, {
