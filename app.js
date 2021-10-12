@@ -8,6 +8,7 @@ const cors = require("cors");
 // const { sequelize } = require("./models");
 const { Review } = require("./models");
 const { Resteraunt } = require("./models");
+// const { User } = require("./models");
 // แปลงรูปภาพ
 const multer = require("multer"); // เป็นการจัดการส่งรูปภาพมาแบบ multipat form data
 const cloudinary = require("cloudinary").v2; //
@@ -71,8 +72,12 @@ app.post(
         ResterauntId,
         reviewImage: result.secure_url,
       });
+      // const userId = await Review.findOne({
+      //   where: { UserId },
+      //   include: { model: User, attributes: ["name"] },
+      // });
       fs.unlinkSync(req.file.path);
-      res.json({ review });
+      res.json({ review});
     } catch (err) {
       next(err);
     }

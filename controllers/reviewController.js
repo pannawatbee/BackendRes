@@ -1,4 +1,5 @@
 const { Review } = require("../models");
+// const { User } = require("./models");
 exports.getAllReview = async (req, res, next) => {
   try {
     const review = await Review.findAll({});
@@ -10,10 +11,14 @@ exports.getAllReview = async (req, res, next) => {
 exports.getReviewById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id)
+    console.log(id);
     const review = await Review.findAll({
-      where: { ResterauntId:id },
+      where: { ResterauntId: id } 
     });
+    // const userId = await Review.findOne({
+    //   where: { UserId },
+    //   include: { model: User, attributes: ["name"] },
+    // });
     res.json({ review });
   } catch (err) {
     next(err);
@@ -37,7 +42,7 @@ exports.createReview = async (req, res, next) => {
       ReviewDetail,
       ReviewTitle,
     });
-    res.status(201).json({ review: review});
+    res.status(201).json({ review: review });
   } catch (err) {
     next(err);
   }
@@ -46,7 +51,7 @@ exports.createReview = async (req, res, next) => {
 exports.deleteReview = async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(id)
+    console.log(id);
     const rows = await Review.destroy({
       where: { id },
     });

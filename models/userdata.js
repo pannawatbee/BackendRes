@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
+  const User = sequelize.define( //ตัวหน้ามันคือชื่อตัวแปร
     "User", // ชื่อตรงตารางดาต้าเบส
     {
       name: {

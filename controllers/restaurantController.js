@@ -1,5 +1,6 @@
 const { Resteraunt } = require("../models");
 const {Review} = require('../models')
+const { User } = require("../models");
 const { Op } = require("sequelize");
 exports.getAllRestaurant = async (req, res, next) => {
   try {
@@ -18,7 +19,12 @@ exports.getRestaurantById = async (req, res, next) => {
     });
     const review = await Review.findAll({
       where: { ResterauntId:id },
+      include: { model: User, attributes: ["name"] }
     })
+    // const userId = await Review.findOne({
+    //   where: { UserId },
+    //   include: { model: User, attributes: ["name"] },
+    // });
     let sumstarrate = review.reduce((sum,current)=>sum+current.starRating,0)
     let avgstarrate =(sumstarrate / review.length).toFixed(2)
     res.json({ resteraunt,review,avgstarrate});
