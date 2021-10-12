@@ -7,6 +7,7 @@ const app = express();
 const cors = require("cors");
 // const { sequelize } = require("./models");
 const { Review } = require("./models");
+const { Resteraunt } = require("./models");
 // แปลงรูปภาพ
 const multer = require("multer"); // เป็นการจัดการส่งรูปภาพมาแบบ multipat form data
 const cloudinary = require("cloudinary").v2; //
@@ -72,6 +73,115 @@ app.post(
       });
       fs.unlinkSync(req.file.path);
       res.json({ review });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.post(
+  "/create-store-res",
+  upload.single("cloudinput"), //เก็บไว้ใน public image
+  async (req, res, next) => {
+    // console.log(req.file); // ไฟล์รูปภาพที่ส่งมา
+    const {
+      restaurantName,
+      carpark,
+      wifi,
+      creditCard,
+      openingTime1,
+      openingTime2,
+      openDay,
+      priceRange,
+      restaurantCategory,
+      restaurantLocation,
+      otherDetail,
+      createType,
+      UserId,
+    } = req.body;
+
+    try {
+      const result = await uploadPromise(req.file.path);
+      console.log(result);
+      const resteraunt = await Resteraunt.create({
+        restaurantName,
+        carpark,
+        wifi,
+        creditCard,
+        openingTime1,
+        openingTime2,
+        openDay,
+        priceRange,
+        restaurantCategory,
+        restaurantLocation,
+        otherDetail,
+        createType,
+        UserId,
+        restaurantImage: result.secure_url,
+      });
+      fs.unlinkSync(req.file.path);
+      res.json({ resteraunt });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+app.put(
+  "/create-store/:id",
+  upload.single("cloudinput"), //เก็บไว้ใน public image
+  async (req, res, next) => {
+    // console.log(req.file); // ไฟล์รูปภาพที่ส่งมา
+    const { id } = req.params;
+    console.log(id);
+    const {
+      restaurantName,
+      carpark,
+      wifi,
+      creditCard,
+      openingTime1,
+      openingTime2,
+      openDay,
+      priceRange,
+      // restaurantCategory,
+      restaurantLocation,
+      otherDetail,
+      createType,
+      UserId,
+    } = req.body;
+    console.log(req.body);
+
+    try {
+      const result = await uploadPromise(req.file.path);
+      // console.log(result);
+
+      // const restaurant = await Restaurant.findOne({where:{id}})
+      const rows = await Resteraunt.update(
+        {
+          restaurantName,
+          carpark,
+          wifi,
+          creditCard,
+          openingTime1,
+          openingTime2,
+          openDay,
+          priceRange,
+          // restaurantCategory,
+          restaurantLocation,
+          otherDetail,
+          createType,
+          UserId,
+          restaurantImage: result.secure_url,
+        },
+        {
+          where: { id },
+        }
+      );
+      fs.unlinkSync(req.file.path);
+      res.json({ rows });
+      if (rows[0] === 0)
+        return res.status(400).json({ message: "update fail" });
+      res.json({ message: "update completed" });
     } catch (err) {
       next(err);
     }

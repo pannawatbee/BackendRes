@@ -41,7 +41,7 @@ exports.getRestaurantHome =async(req,res,next)=>{
 }
 exports.updateRestaurant = async (req, res, next) => {
   try {
-    const { Restauraunt_Id } = req.params;
+    const {id } = req.params;
     const {
       Create_Type,
       User_Id,
@@ -74,11 +74,34 @@ exports.updateRestaurant = async (req, res, next) => {
         Restaurant_Image,
       },
       {
-        where: { Restauraunt_Id },
+        where: { id },
       }
     );
     if (rows[0] === 0) return res.status(400).json({ message: "update fail" });
     res.json({ message: "update completed" });
+  } catch (err) {
+    next(err);
+  }
+};
+exports.createRestaurant  = async (req, res, next) => {
+  try {
+    const {
+      ReviewId,
+      ResterauntId,
+      UserId,
+      StarRating,
+      ReviewDetail,
+      ReviewTitle,
+    } = req.body;
+    const review = await Review.create({
+      ReviewId,
+      ResterauntId,
+      UserId,
+      StarRating,
+      ReviewDetail,
+      ReviewTitle,
+    });
+    res.status(201).json({ review: review});
   } catch (err) {
     next(err);
   }

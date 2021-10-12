@@ -6,6 +6,6 @@ router.get('/',restaurantController.getAllRestaurant)
 router.get('/home',restaurantController.getRestaurantHome)
 router.get('/:id',restaurantController.getRestaurantById)
 router.put('/:id',restaurantController.updateRestaurant)
-// router.post('/',restaurantController.createCustomer )
-// router.delete('/:id',restaurantController.deleteCustomer )
+router.post('/',restaurantController.createRestaurant )
+
 module.exports=router; 
