@@ -77,7 +77,7 @@ app.post(
       //   include: { model: User, attributes: ["name"] },
       // });
       fs.unlinkSync(req.file.path);
-      res.json({ review});
+      res.json({ review });
     } catch (err) {
       next(err);
     }
@@ -106,7 +106,10 @@ app.post(
     } = req.body;
 
     try {
-      const result = await uploadPromise(req.file.path);
+      let result;
+      if (req.file) {
+        result = await uploadPromise(req.file.path);
+      }
       console.log(result);
       const resteraunt = await Resteraunt.create({
         restaurantName,
@@ -122,9 +125,11 @@ app.post(
         otherDetail,
         createType,
         UserId,
-        restaurantImage: result.secure_url,
+        restaurantImage: result ? result.secure_url : undefined, //เซ็ต undefined เพราะจะเอาคอลัมresimageออกไปเลย
       });
-      fs.unlinkSync(req.file.path);
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       res.json({ resteraunt });
     } catch (err) {
       next(err);
@@ -148,7 +153,7 @@ app.put(
       openingTime2,
       openDay,
       priceRange,
-      // restaurantCategory,
+      restaurantCategory,
       restaurantLocation,
       otherDetail,
       createType,
@@ -157,7 +162,10 @@ app.put(
     console.log(req.body);
 
     try {
-      const result = await uploadPromise(req.file.path);
+      let result;
+      if (req.file) {
+        result = await uploadPromise(req.file.path);
+      }
       // console.log(result);
 
       // const restaurant = await Restaurant.findOne({where:{id}})
@@ -171,18 +179,21 @@ app.put(
           openingTime2,
           openDay,
           priceRange,
-          // restaurantCategory,
+          restaurantCategory,
           restaurantLocation,
           otherDetail,
           createType,
           UserId,
-          restaurantImage: result.secure_url,
+          restaurantImage: result ? result.secure_url : undefined,
         },
         {
           where: { id },
         }
       );
-      fs.unlinkSync(req.file.path);
+      // fs.unlinkSync(req.file.path);
+      if (req.file) {
+        fs.unlinkSync(req.file.path);
+      }
       res.json({ rows });
       if (rows[0] === 0)
         return res.status(400).json({ message: "update fail" });

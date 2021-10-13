@@ -30,14 +30,14 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ where: { email: test.formData.email } });
     // console.log(user);
     if (!user) {
-      return res.status(400).json({ message: "invalid email" });
+      return res.status(400).json({ message: "Invalid email" });
     }
     const isPasswordCorrect = await bcrypt.compare(
       test.formData.password,
       user.password
     );
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "invalid password" });
+      return res.status(400).json({ message: "Invalid password" });
     }
     const payload = {
       // ข้อมูลจากหล้งบ้านที่ต้องการส่งไปที่หน้าบ้าน
