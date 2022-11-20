@@ -44,11 +44,11 @@ exports.login = async (req, res, next) => {
       id: user.id,
       email: user.email,
       username: user.name,
-      userType:user.userType
+      userType: user.userType,
     };
-    
-    console.log(process.env.JWT_SECRET_KEY)
-    const token = jwt.sign(payload,process.env.JWT_SECRET_KEY, {
+
+    console.log(process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
       expiresIn: 30 * 60 * 60 * 24,
     }); // คำสั่ง gen token
     console.log(token);
@@ -79,7 +79,6 @@ exports.authenticate = async (req, res, next) => {
     }
     req.user = user;
     req.data = decoded;
-    next();
   } catch (err) {
     next(err);
   }
